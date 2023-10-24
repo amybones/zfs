@@ -7421,6 +7421,13 @@ zfs_check_input_nvpairs(nvlist_t *innvl, const zfs_ioc_vec_t *vec)
 	boolean_t required_keys_found = B_FALSE;
 
 	/*
+	 * Ensure that the provided input nvlist supports lookups.
+	 */
+	if (!(nvlist_nvflag(innvl) & (NV_UNIQUE_NAME | NV_UNIQUE_NAME_TYPE))){
+		return (SET_ERROR(EINVAL));
+	}
+
+	/*
 	 * examine each input pair
 	 */
 	for (nvpair_t *pair = nvlist_next_nvpair(innvl, NULL);
